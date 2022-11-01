@@ -1,0 +1,21 @@
+.clickBoard {
+  grid-area: clickBoard;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ddd5bd; }
+
+.clickBoard__muyu {
+  background: url("../images/muyu.png");
+  background-size: cover;
+  width: 200px;
+  height: 198px;
+  cursor: pointer; }
+
+.clickBoard__muyu:hover {
+  transform: scale(1.1);
+  transition-duration: 200ms; }
+
+.clickBoard__muyu:active {
+  transform: scale(1.2);
+  transition-duration: 200ms; }

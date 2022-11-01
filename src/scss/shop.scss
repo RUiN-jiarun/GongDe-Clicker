@@ -1,0 +1,121 @@
+@import './_variables.scss';
+
+.shop{
+    grid-area: shop;
+    text-align: left;
+    border-left: 2px solid black;
+    background: $background-shop;
+    position: relative;
+}
+
+.shop__container{
+    height: 100%;
+    overflow-y: scroll;
+    padding-bottom: 200px;
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 100%;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.shop__header{
+    width: 100%;
+    position: relative;
+    z-index: 999;
+    background: $background-shop;
+}
+
+.shop__header__element{
+    padding-bottom: 10px;
+    width: auto;
+    display: inline-block;
+    padding-right: 40px;
+    margin-left: 1em;
+    border-bottom: 2px solid black;
+}
+
+.shop__product{
+    display: grid;
+    grid-template-areas:
+      "icon name amount"
+      "icon price amount";
+    grid-template-columns: 1fr 5fr 1fr;
+    background: $milk-color;
+    border: 1.5px solid black;
+    margin-bottom: 10px;
+    cursor: pointer;
+    position: static;
+    z-index: 1;
+}
+
+.shop__product--disabled{
+    cursor: not-allowed;
+    background: $disabled-color;
+}
+
+.shop__product:hover{
+    border: 1.5px solid $hover-color;
+}
+
+.shop__product__information{
+    box-sizing: border-box;
+    display: none;
+    width: 300px;
+    height: 150px;
+    background-color: $tooltip-color;
+    color: #fff;
+    text-align: center;
+    border: 1.5px solid black;
+    padding: 20px;
+    position: absolute;
+    z-index: 10;
+}
+
+.shop__product__information__icon{
+    font-size: 1.8em;
+}
+
+.shop__product:hover .shop__product__information{
+    display: block;
+}
+
+.shop__product__image{
+    grid-area: icon;
+    border-right: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shop__product__image__icon{
+    font-size: 1.8em;
+}
+
+.shop__product__name{
+    grid-area: name;
+    padding-top: 5px;
+    padding-left: 20px;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.shop__product_price{
+    grid-area: price;
+    padding-left: 20px;
+    padding-bottom: 5px;
+}
+
+.shop__product_price__icon{
+    color: $cookie-color;
+}
+
+.shop__product_amount{
+    grid-area: amount;
+    border-left: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2em;
+}

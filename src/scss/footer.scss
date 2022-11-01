@@ -1,0 +1,21 @@
+@import './_variables.scss';
+
+.footer{
+    grid-area: footer;
+    border: 1.5px solid black;
+    border-bottom: none;
+    padding: 2px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    background: $background-primary;
+}
+
+.footer__reset{
+    position: absolute;
+    right: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}

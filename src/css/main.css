@@ -1,0 +1,38 @@
+::selection {
+  background: transparent; }
+
+::-webkit-scrollbar {
+  width: 5px; }
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 0px; }
+
+::-webkit-scrollbar-thumb {
+  background: #8D7D3E;
+  border-radius: 0px; }
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8D7D3E; }
+
+body {
+  font-family: "Raleway", sans-serif;
+  font-size: 16px;
+  background: #ddd5bd;
+  margin: 0px;
+  padding: 0px;
+  min-width: 800px;
+  min-height: 600px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  overflow: hidden; }
+
+.container {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 0.5fr 1fr 0.8fr auto;
+  text-align: center;
+  grid-template-areas: "header shop" "clickBoard shop" "achievements shop" "achievements footer"; }
