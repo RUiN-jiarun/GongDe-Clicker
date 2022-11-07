@@ -1,6 +1,5 @@
 const _SETTINGS = {
     player_name: 'RUiN',
-    player_level: 0,
     metris_amount: 0,
     metris_click_value: 1,
     metris_player_click_counter: 0,

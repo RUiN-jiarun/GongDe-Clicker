@@ -42,7 +42,7 @@ class App extends Component {
       metris_per_second_value: temp_per_sec_click + this.state.metris_gold_time_value,
       metris_gold_time_active: true,
       notification_left_show: true,
-      notification_left_text: 'Golden Time!'
+      notification_left_text: '超级时间！'
     });
 
     let timeleft = this.state.metris_gold_time_duration * 10;
@@ -94,7 +94,7 @@ class App extends Component {
         this.setState(prevState => ({
           metris_gold_click_counter: prevState.metris_gold_click_counter + 1,
           notification_left_show: true,
-          notification_left_text: 'Golden Click!'
+          notification_left_text: '金手指！'
         }))
 
         setTimeout(() => {
@@ -202,7 +202,6 @@ class App extends Component {
     const {
       metris_amount, 
       player_name, 
-      player_level, 
       items, 
       products,
       metris_per_second_value, 
@@ -230,7 +229,6 @@ class App extends Component {
 
         <Header 
           player_name = {player_name}
-          player_level = {player_level}
           metris_amount = {metris_amount}
           metris_per_second_value = {metris_per_second_value}
         />

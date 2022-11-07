@@ -112,30 +112,6 @@ const Achievements = [
         value: 10000
     },
     {
-        name: "1 level",
-        icon: 'angle-double-up',
-        icon_var: 'faAngleDoubleUp',
-        description: '1 player level',
-        type: 'player_level',
-        value: 1
-    },
-    {
-        name: "5 level",
-        icon: 'angle-double-up',
-        icon_var: 'faAngleDoubleUp',
-        description: '5 player level',
-        type: 'player_level',
-        value: 5
-    },
-    {
-        name: "15 level",
-        icon: 'angle-double-up',
-        icon_var: 'faAngleDoubleUp',
-        description: '15 player level',
-        type: 'player_level',
-        value: 15
-    },
-    {
         name: "我佛慈悲",
         icon: 'piggy-bank',
         icon_var: 'faPiggyBank',
