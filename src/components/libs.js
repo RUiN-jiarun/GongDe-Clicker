@@ -80,7 +80,7 @@ export const achievementsChecker = (achievements) => {
     return free_achievements;
 }
 
-export const encode = (string ) => {
+export const encode = (string) => {
     let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     let result = '';
 
