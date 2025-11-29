@@ -1,14 +1,15 @@
 {
   "files": {
-    "main.css": "/GongDe-Clicker/static/css/main.3eb5115c.css",
-    "main.js": "/GongDe-Clicker/static/js/main.fa4b926a.js",
+    "main.css": "/GongDe-Clicker/static/css/main.d40101cd.css",
+    "main.js": "/GongDe-Clicker/static/js/main.7e690f12.js",
     "static/media/muyu.png": "/GongDe-Clicker/static/media/muyu.cf7ec852111ccd99d7d2.png",
+    "static/media/click.mp3": "/GongDe-Clicker/static/media/click.8da0def597a8f604226c.mp3",
     "index.html": "/GongDe-Clicker/index.html",
-    "main.3eb5115c.css.map": "/GongDe-Clicker/static/css/main.3eb5115c.css.map",
-    "main.fa4b926a.js.map": "/GongDe-Clicker/static/js/main.fa4b926a.js.map"
+    "main.d40101cd.css.map": "/GongDe-Clicker/static/css/main.d40101cd.css.map",
+    "main.7e690f12.js.map": "/GongDe-Clicker/static/js/main.7e690f12.js.map"
   },
   "entrypoints": [
-    "static/css/main.3eb5115c.css",
-    "static/js/main.fa4b926a.js"
+    "static/css/main.d40101cd.css",
+    "static/js/main.7e690f12.js"
   ]
 }
