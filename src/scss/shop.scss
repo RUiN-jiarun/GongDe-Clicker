@@ -67,7 +67,7 @@
     color: #fff;
     text-align: center;
     border: 1.5px solid black;
-    padding: 20px;
+    padding: 5px;
     position: absolute;
     z-index: 10;
 }
@@ -88,9 +88,11 @@
     justify-content: center;
 }
 
-.shop__product__image__icon{
-    font-size: 1.8em;
-}
+.shop__product__image__icon {
+  font-size: 2.3em; }
+
+.shop__product__information__image__icon {
+  font-size: 1.8em; }
 
 .shop__product__name{
     grid-area: name;
