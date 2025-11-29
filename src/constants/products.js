@@ -3,7 +3,7 @@ const Products = [
         name: '槌子',
         start_price: 10,
         multiplier: 1.1,
-        value: 10000,
+        value: 1,
         icon: 'wand-magic',
         icon_var: 'faWandMagic',
         description: '多一个槌子，多敲一下。每秒功德自动+1。'
