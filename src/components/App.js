@@ -169,6 +169,24 @@ class App extends Component {
       metris_amount: prevState.metris_amount - changeState.price,
       metris_per_second_value: changeState.per_sec_multi,
       items_buy_counter: prevState.items_buy_counter + 1,
+      stick_buy_counter: prevState.stick_buy_counter + (item === '槌子' ? 1 : 0),
+      monk_buy_counter: prevState.monk_buy_counter + (item === '信徒' ? 1 : 0),
+      book_buy_counter: prevState.book_buy_counter + (item === '金刚经' ? 1 : 0),
+      temple_buy_counter: prevState.temple_buy_counter + (item === '寺庙' ? 1 : 0),
+      jesus_buy_counter: prevState.jesus_buy_counter + (item === '基督' ? 1 : 0),
+      jew_buy_counter: prevState.jew_buy_counter + (item === '犹太' ? 1 : 0),
+      islam_buy_counter: prevState.islam_buy_counter + (item === '清真' ? 1 : 0),
+      pasta_buy_counter: prevState.pasta_buy_counter + (item === '飞天意面神教' ? 1 : 0),
+      atom_buy_counter: prevState.atom_buy_counter + (item === '原子加速器' ? 1 : 0),
+
+      // stick_buy_counter: items,
+      // buddha_buy_counter: 0,
+      // book_buy_counter: 0,
+      // temple_buy_counter: 0,
+      // jesus_buy_counter: 0,
+      // jew_buy_counter: 0,
+      // islam_buy_counter: 0,
+      // pasta_buy_counter: 0,
       products: products
     }), () => {
       localStorage.setItem('metrisClicker', encode(JSON.stringify(this.state)))

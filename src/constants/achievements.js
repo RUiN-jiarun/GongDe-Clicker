@@ -40,7 +40,7 @@ const Achievements = [
         value: 5000
     },
     {
-        name: "破解僧",
+        name: "破戒僧",
         icon: 'hand-point-up',
         icon_var: 'faHandPointUp',
         description: '亲自敲10000下木鱼',
@@ -182,7 +182,79 @@ const Achievements = [
         description: '购买100项物品',
         type: 'items_buy_counter',
         value: 100
-    }
+    },
+    {
+        name: "当头棒喝",
+        icon: 'wand-magic',
+        icon_var: 'faWandMagic',
+        description: '购买100个槌子',
+        type: 'stick_buy_counter',
+        value: 100
+    },
+    {
+        name: "僧多粥少",
+        icon: 'person-praying',
+        icon_var: 'faPersonPraying',
+        description: '购买100个信徒',
+        type: 'monk_buy_counter',
+        value: 100
+    },
+    {
+        name: "色即是空",
+        icon: 'book-open',
+        icon_var: 'faBookOpen',
+        description: '购买100个金刚经',
+        type: 'book_buy_counter',
+        value: 100
+    },
+    {
+        name: "佛光普照",
+        icon: 'place-of-worship',
+        icon_var: 'faPlaceOfWorship',
+        description: '购买100个寺庙',
+        type: 'temple_buy_counter',
+        value: 100
+    },
+    {
+        name: "主爱世人",
+        icon: 'cross',
+        icon_var: 'faCross',
+        description: '购买100个基督',
+        type: 'jesus_buy_counter',
+        value: 100
+    },
+    {
+        name: "逃离埃及",
+        icon: 'star-of-david',
+        icon_var: 'faStarOfDavid',
+        description: '购买100个犹太',
+        type: 'jew_buy_counter',
+        value: 100
+    },
+    {
+        name: "安拉胡巴",
+        icon: 'star-and-crescent',
+        icon_var: 'faStarAndCrescent',
+        description: '购买100个清真',
+        type: 'islam_buy_counter',
+        value: 100
+    },
+    {
+        name: "煮不在乎",
+        icon: 'spaghetti-monster-flying',
+        icon_var: 'faSpaghettiMonsterFlying',
+        description: '购买100个飞天意面神教',
+        type: 'pasta_buy_counter',
+        value: 100
+    },
+    {
+        name: "科学无罪",
+        icon: 'atom',
+        icon_var: 'faAtom',
+        description: '购买100个粒子对撞器',
+        type: 'atom_buy_counter',
+        value: 100
+    },
 ];
 
 export default Achievements;
