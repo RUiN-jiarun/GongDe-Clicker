@@ -36,3 +36,22 @@ body {
   grid-template-rows: 0.5fr 1fr auto;
   text-align: center;
   grid-template-areas: "header shop" "clickBoard shop" "footer shop"; }
+
+.goldTimeOverlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1400;
+  background: radial-gradient(circle at center, rgba(255, 226, 126, 0.2) 0%, rgba(255, 196, 82, 0.1) 38%, transparent 72%), repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 18px);
+  mix-blend-mode: screen;
+  animation: gold-time-sweep 1.25s linear infinite; }
+
+@keyframes gold-time-sweep {
+  from {
+    opacity: 0.72;
+    transform: translate3d(0, 0, 0); }
+  50% {
+    opacity: 1; }
+  to {
+    opacity: 0.72;
+    transform: translate3d(18px, 0, 0); } }

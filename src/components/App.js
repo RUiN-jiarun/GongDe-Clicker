@@ -29,7 +29,8 @@ class App extends Component {
         loadedSettings.items,
         loadedSettings.achievements.length
       ),
-      achievements_window_open: false
+      achievements_window_open: false,
+      recent_achievements: []
     };
     this.start = 0;
     this.lastClick = 0;
@@ -170,9 +171,14 @@ class App extends Component {
         this.state.achievements.length > previousAchievementCount;
 
       if (hasNewAchievement) {
+        const newAchievementNames = this.state.achievements
+          .slice(previousAchievementCount)
+          .map(achievement => achievement.name);
+
         this.setState({
           notification_top_show: true,
-          notification_top_text: '获得新成就!'
+          notification_top_text: '获得新成就!',
+          recent_achievements: newAchievementNames
         });
 
         setTimeout(() => {
@@ -181,6 +187,14 @@ class App extends Component {
             notification_top_text: ''
           });
         }, 3000);
+
+        setTimeout(() => {
+          this.setState(prevState => ({
+            recent_achievements: prevState.recent_achievements.filter(
+              name => !newAchievementNames.includes(name)
+            )
+          }));
+        }, 4200);
       }
 
       saveSettings(this.state);
@@ -278,13 +292,20 @@ class App extends Component {
       notification_top_text,
       notification_top_show,
       notification_left_text,
-      notification_left_show
+      notification_left_show,
+      metris_gold_time_active,
+      recent_achievements
     } = this.state;
 
     document.title = `${parseInt(metris_amount, 10).toLocaleString()} 功德 | 功德点击器`;
 
     return (
-      <div className="container">
+      <React.Fragment>
+        {metris_gold_time_active && (
+          <div className="goldTimeOverlay" aria-hidden="true" />
+        )}
+
+        <div className="container">
 
         <NotificationTop 
           notification_text={notification_top_text} 
@@ -313,6 +334,7 @@ class App extends Component {
         />
 
         <ClickBoard
+          goldTimeActive={metris_gold_time_active}
           onClick={this.metrisClick}
           stickCount={
             (items.find(item => item.name === '槌子') || { count: 0 }).count
@@ -322,13 +344,15 @@ class App extends Component {
         <Achievements
           achievements={achievements}
           productionBonus={getAchievementBonus(achievements.length)}
+          recentAchievements={recent_achievements}
           show={this.state.achievements_window_open}
           onOpen={this.openAchievements}
           onClose={this.closeAchievements}
         />
 
         <Footer onClick={this.resetGame}/>
-      </div>
+        </div>
+      </React.Fragment>
     );
   }
 }

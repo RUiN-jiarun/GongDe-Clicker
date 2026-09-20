@@ -3,8 +3,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 
-const Achievement = ({ disabled, options }) => {
-  const { name, icon, icon_var, description, value } = options;
+const getAchievementTier = (type) => {
+  if (type === 'metris_player_click_counter' || type === 'metris_player_click_frequency') {
+    return 'bronze';
+  }
+
+  if (type === 'metris_amount') {
+    return 'silver';
+  }
+
+  if (
+    type === 'metris_gold_click_counter' ||
+    type === 'metris_gold_time_counter'
+  ) {
+    return 'gold';
+  }
+
+  return 'purple';
+};
+
+const Achievement = ({ disabled, options, isNewlyUnlocked = false }) => {
+  const { name, icon, icon_var, description, value, type } = options;
+  const tier = getAchievementTier(type);
 
   library.add(Icons[icon_var]);
 
@@ -20,7 +40,9 @@ const Achievement = ({ disabled, options }) => {
 
   return (
     <div
-      className='achievements__item'
+      className={`achievements__item achievements__item--${tier}${
+        isNewlyUnlocked ? ' achievements__item--newlyUnlocked' : ''
+      }`}
       aria-describedby={tooltipId}
     >
       <div className='achievements__item__value'>

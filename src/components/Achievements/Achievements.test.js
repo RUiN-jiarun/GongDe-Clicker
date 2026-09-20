@@ -84,3 +84,39 @@ it('shows the current achievement production bonus', () => {
 
   expect(screen.getByText('当前加成：+1.2%')).toBeTruthy();
 });
+
+
+it('renders tiered achievement frames', () => {
+  const allAchievements = _ACHIEVEMENTS.map(achievement => ({
+    name: achievement.name
+  }));
+
+  const { container } = render(
+    <Achievements
+      achievements={allAchievements}
+      show
+      onOpen={jest.fn()}
+      onClose={jest.fn()}
+    />
+  );
+
+  expect(container.querySelector('.achievements__item--bronze')).toBeTruthy();
+  expect(container.querySelector('.achievements__item--silver')).toBeTruthy();
+  expect(container.querySelector('.achievements__item--gold')).toBeTruthy();
+  expect(container.querySelector('.achievements__item--purple')).toBeTruthy();
+});
+
+it('marks newly unlocked achievements for the unlock animation', () => {
+  render(
+    <Achievements
+      achievements={[{ name: _ACHIEVEMENTS[0].name }]}
+      recentAchievements={[_ACHIEVEMENTS[0].name]}
+      show
+      onOpen={jest.fn()}
+      onClose={jest.fn()}
+    />
+  );
+
+  const item = screen.getByRole('tooltip').parentElement;
+  expect(item.className).toContain('achievements__item--newlyUnlocked');
+});

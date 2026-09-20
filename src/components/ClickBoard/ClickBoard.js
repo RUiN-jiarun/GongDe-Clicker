@@ -51,6 +51,7 @@ class ClickBoard extends Component {
     this.clickAudio = new Audio(clickSound);
     this.effectId = 0;
     this.effectTimeouts = [];
+    this.muyuRef = React.createRef();
   }
 
   componentWillUnmount() {
@@ -104,8 +105,18 @@ class ClickBoard extends Component {
     }, EFFECT_DURATION));
   };
 
+  restartSquashAnimation = () => {
+    const muyu = this.muyuRef.current;
+    if (!muyu) return;
+
+    muyu.classList.remove('clickBoard__muyu--pressed');
+    void muyu.offsetWidth;
+    muyu.classList.add('clickBoard__muyu--pressed');
+  };
+
   clickHandler = (event) => {
     this.playClickSound();
+    this.restartSquashAnimation();
 
     const clickResult = this.props.onClick(undefined, true, event);
     if (clickResult) {
@@ -122,11 +133,27 @@ class ClickBoard extends Component {
 
   render() {
     const { effects } = this.state;
-    const { stickCount = 0 } = this.props;
+    const { stickCount = 0, goldTimeActive = false } = this.props;
     const sticks = getStickPositions(Math.min(stickCount, 100));
 
     return (
-      <div className='clickBoard'>
+      <div
+        className={
+          goldTimeActive
+            ? 'clickBoard clickBoard--goldTime'
+            : 'clickBoard'
+        }
+      >
+        <div className='clickBoard__background' aria-hidden='true'>
+          <span className='clickBoard__backgroundSky' />
+          <span className='clickBoard__backgroundGlow' />
+          <span className='clickBoard__backgroundMountainFar' />
+          <span className='clickBoard__backgroundMountainNear' />
+          <span className='clickBoard__backgroundGround' />
+          <span className='clickBoard__backgroundCloud clickBoard__backgroundCloud--one' />
+          <span className='clickBoard__backgroundCloud clickBoard__backgroundCloud--two' />
+        </div>
+
         <div className='clickBoard__stickOrbit' aria-hidden='true'>
           {sticks.map((stick, index) => (
             <span
@@ -142,6 +169,7 @@ class ClickBoard extends Component {
         </div>
 
         <div
+          ref={this.muyuRef}
           className='clickBoard__muyu'
           onClick={this.clickHandler}
           onKeyDown={this.keyDownHandler}
@@ -151,6 +179,15 @@ class ClickBoard extends Component {
         >
           {effects.map(effect => (
             <React.Fragment key={effect.id}>
+              <span
+                className={
+                  effect.gold
+                    ? 'clickBoard__shockwave clickBoard__shockwave--gold'
+                    : 'clickBoard__shockwave'
+                }
+                style={{ left: `${effect.x}px`, top: `${effect.y}px` }}
+              />
+
               <span
                 className={
                   effect.gold

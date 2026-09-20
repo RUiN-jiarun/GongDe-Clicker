@@ -64,3 +64,44 @@ describe('ClickBoard hammer orbit', () => {
     expect(container.querySelector('.clickBoard__stick')).toBeNull();
   });
 });
+
+
+describe('ClickBoard art upgrades', () => {
+  beforeEach(() => {
+    window.Audio = jest.fn().mockImplementation(() => ({
+      currentTime: 0,
+      play: jest.fn()
+    }));
+  });
+
+  it('renders the layered background', () => {
+    const { container } = render(<ClickBoard onClick={jest.fn()} />);
+
+    expect(container.querySelector('.clickBoard__background')).toBeTruthy();
+    expect(container.querySelector('.clickBoard__backgroundSky')).toBeTruthy();
+    expect(container.querySelector('.clickBoard__backgroundMountainFar')).toBeTruthy();
+    expect(container.querySelector('.clickBoard__backgroundMountainNear')).toBeTruthy();
+  });
+
+  it('spawns a shockwave on click', () => {
+    const { container } = render(
+      <ClickBoard
+        onClick={jest.fn(() => ({ gained: 1, goldClick: false, goldTime: false }))}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: '敲木鱼积功德' }));
+
+    expect(container.querySelector('.clickBoard__shockwave')).toBeTruthy();
+  });
+
+  it('marks the board during gold time', () => {
+    const { container } = render(
+      <ClickBoard onClick={jest.fn()} goldTimeActive />
+    );
+
+    expect(container.querySelector('.clickBoard').className).toContain(
+      'clickBoard--goldTime'
+    );
+  });
+});

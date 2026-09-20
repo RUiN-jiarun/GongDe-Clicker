@@ -5,13 +5,21 @@ import '../../css/achievements.css';
 
 class Achievements extends Component {
   render() {
-    const { achievements, productionBonus = 0, show, onOpen, onClose } = this.props;
+    const {
+      achievements,
+      productionBonus = 0,
+      recentAchievements = [],
+      show,
+      onOpen,
+      onClose
+    } = this.props;
     const earnedNames = new Set(achievements.map(achievement => achievement.name));
 
     const achievementItems = _ACHIEVEMENTS.map(achievement => (
       <Achievement
         key={achievement.name}
         disabled={!earnedNames.has(achievement.name)}
+        isNewlyUnlocked={recentAchievements.includes(achievement.name)}
         options={achievement}
       />
     ));

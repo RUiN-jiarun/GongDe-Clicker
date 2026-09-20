@@ -1,10 +1,82 @@
 .clickBoard {
   grid-area: clickBoard;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ddd5bd;
-  position: relative; }
+  background: transparent;
+  overflow: hidden; }
+
+.clickBoard--goldTime .clickBoard__backgroundSky {
+  filter: hue-rotate(14deg) saturate(1.18); }
+
+.clickBoard__background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0; }
+
+.clickBoard__backgroundSky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #f8e8c4 0%, #ead6b2 42%, #dcc59d 100%); }
+
+.clickBoard__backgroundGlow {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 520px;
+  height: 520px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 247, 214, 0.72) 0%, rgba(255, 226, 148, 0.3) 42%, transparent 72%); }
+
+.clickBoard__backgroundMountainFar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 62%;
+  background: linear-gradient(180deg, #cbb794 0%, #b9a684 100%);
+  clip-path: polygon(0 65%, 12% 44%, 24% 58%, 36% 36%, 50% 56%, 64% 39%, 78% 58%, 90% 44%, 100% 62%, 100% 100%, 0 100%);
+  opacity: 0.58; }
+
+.clickBoard__backgroundMountainNear {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48%;
+  background: linear-gradient(180deg, #a99170 0%, #8c7355 100%);
+  clip-path: polygon(0 72%, 16% 52%, 30% 68%, 46% 46%, 62% 66%, 78% 50%, 92% 68%, 100% 56%, 100% 100%, 0 100%);
+  opacity: 0.74; }
+
+.clickBoard__backgroundGround {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18%;
+  background: linear-gradient(180deg, rgba(95, 73, 39, 0.34), rgba(67, 50, 29, 0.48)), repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 18px); }
+
+.clickBoard__backgroundCloud {
+  position: absolute;
+  width: 220px;
+  height: 54px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.48);
+  filter: blur(12px);
+  animation: click-board-cloud 24s linear infinite; }
+
+.clickBoard__backgroundCloud--one {
+  left: 4%;
+  top: 16%; }
+
+.clickBoard__backgroundCloud--two {
+  right: 8%;
+  top: 28%;
+  width: 280px;
+  animation-duration: 32s;
+  animation-delay: -8s; }
 
 .clickBoard__stickOrbit {
   position: absolute;
@@ -37,7 +109,9 @@
   z-index: 2;
   overflow: visible;
   outline: none;
-  touch-action: manipulation; }
+  touch-action: manipulation;
+  transform-origin: center;
+  will-change: transform; }
 
 .clickBoard__muyu:hover {
   transform: scale(1.1);
@@ -47,8 +121,26 @@
   transform: scale(1.2);
   transition-duration: 200ms; }
 
+.clickBoard__muyu--pressed {
+  animation: click-board-squash 240ms ease-out; }
+
 .clickBoard__muyu:focus-visible {
   box-shadow: 0 0 0 4px rgba(141, 125, 62, 0.5); }
+
+.clickBoard__shockwave {
+  position: absolute;
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.82);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: click-board-shockwave 620ms ease-out forwards; }
+
+.clickBoard__shockwave--gold {
+  border-color: rgba(255, 214, 92, 0.92);
+  box-shadow: 0 0 14px rgba(255, 194, 0, 0.42); }
 
 .clickBoard__gain {
   position: absolute;
@@ -81,11 +173,37 @@
   width: 10px;
   height: 10px; }
 
+@keyframes click-board-cloud {
+  from {
+    transform: translateX(0); }
+  to {
+    transform: translateX(42px); } }
+
 @keyframes click-board-stick-orbit {
   from {
     transform: rotate(0deg); }
   to {
     transform: rotate(360deg); } }
+
+@keyframes click-board-squash {
+  0% {
+    transform: scale(1, 1); }
+  28% {
+    transform: scale(1.08, 0.88); }
+  58% {
+    transform: scale(0.96, 1.05); }
+  100% {
+    transform: scale(1, 1); } }
+
+@keyframes click-board-shockwave {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35); }
+  22% {
+    opacity: 0.95; }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3.6); } }
 
 @keyframes click-board-gain {
   0% {

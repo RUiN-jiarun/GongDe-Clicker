@@ -103,10 +103,40 @@
     justify-content: center;
     background: $milk-color;
     cursor: default;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .achievements__item:hover{
     border-color: $hover-color;
+}
+
+.achievements__item--bronze{
+    border-color: #a05a2c;
+    background: linear-gradient(145deg, #f0d4ae 0%, #d6a271 100%);
+    box-shadow: inset 0 0 10px rgba(160, 90, 44, 0.22);
+}
+
+.achievements__item--silver{
+    border-color: #8f8f8f;
+    background: linear-gradient(145deg, #f2f2f2 0%, #c9c9c9 100%);
+    box-shadow: inset 0 0 10px rgba(120, 120, 120, 0.20);
+}
+
+.achievements__item--gold{
+    border-color: #b58900;
+    background: linear-gradient(145deg, #ffe9a4 0%, #d9a400 100%);
+    box-shadow: inset 0 0 12px rgba(181, 137, 0, 0.28);
+}
+
+.achievements__item--purple{
+    border-color: #6f4f9f;
+    background: linear-gradient(145deg, #e4d7f5 0%, #b99bd8 100%);
+    box-shadow: inset 0 0 12px rgba(111, 79, 159, 0.24);
+}
+
+.achievements__item--newlyUnlocked{
+    animation: achievement-unlock 700ms ease-out;
 }
 
 .achievements__item--disabled{
@@ -169,4 +199,25 @@
 
 .achievements__item:hover .achievements__item__information{
     opacity: 1;
+}
+
+
+@keyframes achievement-unlock{
+    0%{
+        opacity: 0;
+        transform: scale(0.55);
+        filter: brightness(1.7);
+    }
+
+    45%{
+        opacity: 1;
+        transform: scale(1.12);
+        filter: brightness(1.28);
+    }
+
+    100%{
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1);
+    }
 }
