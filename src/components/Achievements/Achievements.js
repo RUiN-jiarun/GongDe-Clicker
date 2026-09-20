@@ -4,41 +4,65 @@ import _ACHIEVEMENTS from '../../constants/achievements';
 import '../../css/achievements.css';
 
 class Achievements extends Component {
-    
-    render() {
+  render() {
+    const { achievements, productionBonus = 0, show, onOpen, onClose } = this.props;
+    const earnedNames = new Set(achievements.map(achievement => achievement.name));
 
-        const { achievements } = this.props;
+    const achievementItems = _ACHIEVEMENTS.map(achievement => (
+      <Achievement
+        key={achievement.name}
+        disabled={!earnedNames.has(achievement.name)}
+        options={achievement}
+      />
+    ));
 
-        const achievements_container = _ACHIEVEMENTS.map((element, key) => {
+    return (
+      <div className='achievements'>
+        <button
+          className='achievements__toggle'
+          onClick={onOpen}
+          aria-expanded={show}
+          aria-haspopup='dialog'
+        >
+          成就 <span>{earnedNames.size}/{_ACHIEVEMENTS.length}</span>
+        </button>
 
-            const earn_achiev = achievements.filter(achiev => {return element.name === achiev.name});
+        {show && (
+          <section
+            className='achievements__window'
+            role='dialog'
+            aria-modal='false'
+            aria-labelledby='achievements-window-title'
+          >
+            <header className='achievements__header'>
+              <h1
+                className='achievements__header__element'
+                id='achievements-window-title'
+              >
+                成就
+              </h1>
 
-            if(earn_achiev.length !== 0){
-                return <Achievement   
-                    options={element} 
-                    key={key}
-                />
-            }else{
-                return <Achievement
-                    disabled   
-                    options={element} 
-                    key={key}
-                />
-            }
-        })
+              <div className='achievements__bonus'>
+                当前加成：+{(productionBonus * 100).toFixed(1)}%
+              </div>
 
-        return (
-            <div className='achievements'>
-                <div className='achievements__header'>
-                    <h1 className='achievements__header__element'>成就:</h1>
-                </div>
+              <button
+                className='achievements__close'
+                onClick={onClose}
+                aria-label='关闭成就窗口'
+              >
+                ×
+              </button>
+            </header>
 
-                <div className='achievements__container'>
-                    {achievements_container}
-                </div>
+            <div className='achievements__container'>
+              {achievementItems}
             </div>
-        );
-    }
+          </section>
+        )}
+      </div>
+    );
+  }
 }
 
 export default Achievements;

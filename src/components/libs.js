@@ -1,135 +1,229 @@
 import _PRODUCTS from '../constants/products';
 import _ACHIEVEMENTS from '../constants/achievements';
 
-export const buyItem = (item, price, items) => {
-    const updatePerSecond = (addItems) => {
+const STORAGE_KEY = 'metrisClicker';
+const SAVE_VERSION = 1;
+const LEGACY_BASE64_CHARACTERS =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
-        let per_sec_multi = 0;
-  
-        for(let element of addItems){
-          const product = _PRODUCTS.filter((product) => { return product.name === element.name})
-          per_sec_multi += element.count * product[0].value;
-        }
+const migrations = [
+  // Version 0 was the original JSON save without a version field.
+  (savedSettings) => ({ ...savedSettings, saveVersion: 1 })
+];
+const PRODUCT_NAMES = _PRODUCTS.map((product) => product.name);
+const ACHIEVEMENT_BONUS_PER_ITEM = 0.001;
+const ACHIEVEMENT_NAMES = _ACHIEVEMENTS.map((achievement) => achievement.name);
 
-        return per_sec_multi;
-    }
-  
-    let counter = 0;
+const cloneSettings = (settings) => JSON.parse(JSON.stringify(settings));
 
-    let data = items.map((element) => {
-        if(element.name === item){ counter++; element.count++; }
-            return element;
+const decodeLegacySave = (value) => {
+  let result = '';
+  let i = 0;
+
+  do {
+    const b1 = LEGACY_BASE64_CHARACTERS.indexOf(value.charAt(i++));
+    const b2 = LEGACY_BASE64_CHARACTERS.indexOf(value.charAt(i++));
+    const b3 = LEGACY_BASE64_CHARACTERS.indexOf(value.charAt(i++));
+    const b4 = LEGACY_BASE64_CHARACTERS.indexOf(value.charAt(i++));
+
+    const a = ((b1 & 0x3F) << 2) | ((b2 >> 4) & 0x3);
+    const b = ((b2 & 0xF) << 4) | ((b3 >> 2) & 0xF);
+    const c = ((b3 & 0x3) << 6) | (b4 & 0x3F);
+
+    result += String.fromCharCode(a) +
+      (b ? String.fromCharCode(b) : '') +
+      (c ? String.fromCharCode(c) : '');
+  } while (i < value.length);
+
+  return result;
+};
+
+const migrateSettings = (savedSettings) => {
+  const rawVersion = Number(savedSettings.saveVersion) || 0;
+  if (rawVersion < 0 || rawVersion > SAVE_VERSION) return null;
+
+  let migratedSettings = savedSettings;
+  for (let version = rawVersion; version < SAVE_VERSION; version++) {
+    migratedSettings = migrations[version](migratedSettings);
+  }
+
+  return migratedSettings;
+};
+
+const isPlainObject = (value) => {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+};
+
+const sanitizeItems = (value) => {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter((item) => isPlainObject(item) && PRODUCT_NAMES.includes(item.name))
+    .map((item) => ({
+      name: item.name,
+      count: Number.isInteger(item.count) && item.count > 0 ? item.count : 0
+    }))
+    .filter((item) => item.count > 0);
+};
+
+const sanitizeProducts = (value, defaultProducts) => {
+  if (!Array.isArray(value)) return cloneSettings(defaultProducts);
+
+  return defaultProducts.map((defaultProduct) => {
+    const savedProduct = value.find((product) => {
+      return isPlainObject(product) && product.name === defaultProduct.name;
+    });
+
+    if (!savedProduct) return defaultProduct;
+
+    const savedPrice = Number(savedProduct.start_price);
+    return {
+      ...defaultProduct,
+      start_price: Number.isFinite(savedPrice) && savedPrice >= defaultProduct.start_price
+        ? savedPrice
+        : defaultProduct.start_price
+    };
+  });
+};
+
+const sanitizeAchievements = (value) => {
+  if (!Array.isArray(value)) return [];
+
+  const names = new Set();
+
+  return value
+    .filter((achievement) => {
+      return isPlainObject(achievement) && ACHIEVEMENT_NAMES.includes(achievement.name);
     })
+    .map((achievement) => ({ name: achievement.name }))
+    .filter((achievement) => {
+      if (names.has(achievement.name)) return false;
+      names.add(achievement.name);
+      return true;
+    });
+};
 
-    if(counter === 0){
-        data.push({name: item, count: 1})
-        return {
-            item: data,
-            price: price,
-            per_sec_multi: updatePerSecond(data)
-        }
-    }else{
-        return {
-            item: data,
-            price: price,
-            per_sec_multi: updatePerSecond(data)
-        }
+export const loadSettings = (defaultSettings, storage = window.localStorage) => {
+  const settings = cloneSettings(defaultSettings);
+  const savedValue = storage.getItem(STORAGE_KEY);
+
+  if (!savedValue) return settings;
+
+  try {
+    let savedSettings;
+
+    try {
+      savedSettings = JSON.parse(savedValue);
+    } catch (error) {
+      savedSettings = JSON.parse(decodeLegacySave(savedValue));
     }
-}
 
-export const checkSettingsImport = ( org, imp ) => {
-    let keys_org = Object.keys(org);
-    let keys_imp = Object.keys(imp);
+    if (!isPlainObject(savedSettings)) return settings;
 
-    if (keys_org === keys_imp) return true;
-    if (keys_org == null || keys_imp == null) return false;
-    if (keys_org.length !== keys_imp.length) return false;
+    savedSettings = migrateSettings(savedSettings);
+    if (!savedSettings) return settings;
 
-    for (let i = 0; i < keys_org.length; ++i) {
-        if (keys_org[i] !== keys_imp[i]) return false;
-    }
-    return true;
-}
+    Object.keys(settings).forEach((key) => {
+      const defaultValue = settings[key];
+      const savedFieldValue = savedSettings[key];
 
-export const chanceCalculation = ( chance ) => {
-    return Math.random() <= chance
-}
+      if (key === 'items') {
+        settings[key] = sanitizeItems(savedFieldValue);
+      } else if (key === 'products') {
+        settings[key] = sanitizeProducts(savedFieldValue, _PRODUCTS);
+      } else if (key === 'achievements') {
+        settings[key] = sanitizeAchievements(savedFieldValue);
+      } else if (typeof defaultValue === 'number') {
+        settings[key] = Number.isFinite(savedFieldValue)
+          ? savedFieldValue
+          : defaultValue;
+      } else if (typeof defaultValue === 'boolean') {
+        settings[key] = typeof savedFieldValue === 'boolean'
+          ? savedFieldValue
+          : defaultValue;
+      } else if (typeof defaultValue === 'string') {
+        settings[key] = typeof savedFieldValue === 'string'
+          ? savedFieldValue
+          : defaultValue;
+      }
+    });
 
-export const levelCalculation = ( cookies ) => {
-    if(cookies >= 10){
-        let calc = -(((cookies - 10)/10 * -1) - 1)
-        return parseInt(Math.log2(calc), 10) + 1;
-    }else{
-        return 0;
-    }
-}
+    settings.notification_top_show = false;
+    settings.notification_left_show = false;
+    settings.notification_top_text = '';
+    settings.notification_left_text = '';
+    settings.metris_gold_time_active = false;
+
+    return settings;
+  } catch (error) {
+    return settings;
+  }
+};
+
+export const saveSettings = (state, storage = window.localStorage) => {
+  try {
+    storage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (error) {
+    // localStorage can be unavailable in private browsing or when full.
+  }
+};
+
+export const getAchievementBonus = (achievementCount) => {
+  return Math.max(achievementCount, 0) * ACHIEVEMENT_BONUS_PER_ITEM;
+};
+
+export const getAchievementMultiplier = (achievementCount) => {
+  return 1 + getAchievementBonus(achievementCount);
+};
+
+export const getProductValue = (product, achievementCount) => {
+  return product.value * getAchievementMultiplier(achievementCount);
+};
+
+export const calculatePerSecond = (items, achievementCount) => {
+  const multiplier = getAchievementMultiplier(achievementCount);
+
+  return items.reduce((perSecond, element) => {
+    const product = _PRODUCTS.find((product) => product.name === element.name);
+    return product ? perSecond + element.count * product.value * multiplier : perSecond;
+  }, 0);
+};
+
+export const buyItem = (item, price, items, achievementCount = 0) => {
+  const updatePerSecond = (addItems) => calculatePerSecond(addItems, achievementCount);
+
+  let itemExists = false;
+  const data = items.map((element) => {
+    if (element.name !== item) return element;
+
+    itemExists = true;
+    return { ...element, count: element.count + 1 };
+  });
+
+  if (!itemExists) {
+    data.push({ name: item, count: 1 });
+  }
+
+  return {
+    item: data,
+    price: price,
+    per_sec_multi: updatePerSecond(data)
+  };
+};
+
+export const chanceCalculation = (chance) => Math.random() <= chance;
+
+export const levelCalculation = (cookies) => {
+  if (cookies >= 10) {
+    const calc = -(((cookies - 10) / 10 * -1) - 1);
+    return parseInt(Math.log2(calc), 10) + 1;
+  }
+
+  return 0;
+};
 
 export const achievementsChecker = (achievements) => {
-    let free_achievements = []
-    for(let element of _ACHIEVEMENTS){
-      let count = 0;
-      for(let own of achievements){
-        if(element.name === own.name)
-          count ++;
-      }
+  const ownedNames = new Set(achievements.map((achievement) => achievement.name));
 
-      if(count === 0)
-        free_achievements.push(element)
-    }
-
-    return free_achievements;
-}
-
-export const encode = (string) => {
-    let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    let result = '';
-
-    let i = 0;
-    do {
-        let a = string.charCodeAt(i++);
-        let b = string.charCodeAt(i++);
-        let c = string.charCodeAt(i++);
-
-        a = a ? a : 0;
-        b = b ? b : 0;
-        c = c ? c : 0;
-
-        let b1 = ( a >> 2 ) & 0x3F;
-        let b2 = ( ( a & 0x3 ) << 4 ) | ( ( b >> 4 ) & 0xF );
-        let b3 = ( ( b & 0xF ) << 2 ) | ( ( c >> 6 ) & 0x3 );
-        let b4 = c & 0x3F;
-
-        if( ! b ) {
-            b3 = b4 = 64;
-        } else if( ! c ) {
-            b4 = 64;
-        }
-
-        result += characters.charAt( b1 ) + characters.charAt( b2 ) + characters.charAt( b3 ) + characters.charAt( b4 );
-
-    } while ( i < string.length );
-
-    return result;
-}
-
-export const decode = (string) => {
-    let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    let result     = '';
-
-    let i = 0;
-    do {
-        let b1 = characters.indexOf( string.charAt(i++) );
-        let b2 = characters.indexOf( string.charAt(i++) );
-        let b3 = characters.indexOf( string.charAt(i++) );
-        let b4 = characters.indexOf( string.charAt(i++) );
-
-        let a = ( ( b1 & 0x3F ) << 2 ) | ( ( b2 >> 4 ) & 0x3 );
-        let b = ( ( b2 & 0xF  ) << 4 ) | ( ( b3 >> 2 ) & 0xF );
-        let c = ( ( b3 & 0x3  ) << 6 ) | ( b4 & 0x3F );
-
-        result += String.fromCharCode(a) + (b?String.fromCharCode(b):'') + (c?String.fromCharCode(c):'');
-
-    } while( i < string.length );
-
-    return result;
-}
+  return _ACHIEVEMENTS.filter((achievement) => !ownedNames.has(achievement.name));
+};

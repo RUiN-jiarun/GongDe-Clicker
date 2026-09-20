@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "功德点击器",
+  "name": "功德点击器",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#8d7d3e",
+  "background_color": "#ddd5bd",
+  "description": "点击木鱼，积累功德，解锁成就的休闲点击游戏。"
 }

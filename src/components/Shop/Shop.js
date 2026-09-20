@@ -23,8 +23,13 @@ class Shop extends Component {
     buyItem = (item, price) => {
 
         let products = this.state.products.map(element => {
-            if(element.name === item)
-                element.start_price = parseFloat(element.start_price * element.multiplier);
+            if(element.name === item) {
+                return {
+                    ...element,
+                    start_price: parseFloat(element.start_price * element.multiplier)
+                };
+            }
+
             return element;
         })
 
@@ -36,7 +41,7 @@ class Shop extends Component {
 
     render() {
 
-        const { metris_amount, items } = this.props;
+        const { metris_amount, items, achievementMultiplier } = this.props;
 
         const products_containter = this.state.products.map((element, key) => {
             
@@ -49,19 +54,21 @@ class Shop extends Component {
             }
 
             if( metris_amount >= element.start_price){
-                return <Product 
-                    amount={amount} 
-                    onClick={this.buyItem} 
-                    options={element} 
-                    key={key}
+                return <Product
+                    achievementMultiplier={achievementMultiplier}
+                    amount={amount}
+                    onClick={this.buyItem}
+                    options={element}
+                    key={element.name}
                 />
             }else{
-                return <Product 
-                    disabled 
-                    amount={amount}  
-                    onClick={this.buyItem} 
-                    options={element} 
-                    key={key}
+                return <Product
+                    achievementMultiplier={achievementMultiplier}
+                    disabled
+                    amount={amount}
+                    onClick={this.buyItem}
+                    options={element}
+                    key={element.name}
                 />
             }
         })

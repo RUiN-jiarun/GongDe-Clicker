@@ -1,7 +1,9 @@
 const _SETTINGS = {
+    saveVersion: 1,
     player_name: 'RUiN',
     metris_amount: 0,
     metris_click_value: 1,
+    player_level: 0,
     metris_player_click_counter: 0,
     metris_player_click_frequency: 0,
     metris_per_second_value: 0,

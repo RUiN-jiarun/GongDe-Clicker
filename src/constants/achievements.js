@@ -185,8 +185,8 @@ const Achievements = [
     },
     {
         name: "当头棒喝",
-        icon: 'wand-magic',
-        icon_var: 'faWandMagic',
+        icon: 'gavel',
+        icon_var: 'faGavel',
         description: '购买100个槌子',
         type: 'stick_buy_counter',
         value: 100
